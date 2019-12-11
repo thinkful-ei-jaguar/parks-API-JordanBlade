@@ -8,7 +8,7 @@ function getResults(stateCode, maxResults){
   //define the paramater object that we will format correctly
   const params = {
     stateCode: stateCode,
-    //max: maxResults,
+    limit: maxResults,
     api_key: apiKey
   };
 
@@ -24,8 +24,31 @@ function getResults(stateCode, maxResults){
       }
       throw new Error(response.statusText);
     })
-    .then(responseJson => console.log(responseJson))
-    .catch(error => console.log('error occurerrerred'));
+    .then(responseJson => {
+      console.log(responseJson);
+      displayResults(responseJson);})
+    .catch(error => {console.log('error occurerrerred');});
+
+
+}
+
+function displayResults(responseJson) {
+  console.log('displayResults is firing');
+  //Need Full name, description, website url, and park's irl address
+  $('.results').empty();
+  
+  for (let i = 0; responseJson.data.length; i++) {
+    console.log(`${responseJson.data[i].fullName}`);
+    $('ul').append(`<li>Park Name: <a href='${responseJson.data[i].url}'>${responseJson.data[i].fullName}</a>
+    <p>Description: ${responseJson.data[i].description}</p>
+    
+    
+    
+    </li>
+    `);
+
+  }
+
 
 }
 
@@ -46,5 +69,6 @@ function makePage(){
     getResults(stateCode, maxResults);
   });
 }
+
 
 $(makePage);
